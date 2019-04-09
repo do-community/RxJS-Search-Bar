@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>RxJS Tutorial</title>
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"/>
+
+    <!-- Load Rubik font -->
+    <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
+
+    <!-- Add Custom inline CSS -->
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: "Rubik", sans-serif;
+        }
+
+        .search-container {
+            margin-top: 50px;
+        }
+
+        .search-container .search-heading {
+            display: block;
+            margin-bottom: 50px;
+        }
+
+        .search-container input,
+        .search-container input:focus {
+            padding: 16px 16px 16px;
+            border: none;
+            background: rgb(255, 255, 255);
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .results-container {
+            margin-top: 50px;
+        }
+
+        .results-container .list-group .list-group-item {
+            background-color: transparent;
+            border-top: none !important;
+            border-bottom: 1px solid rgba(236, 229, 229, 0.64);
+        }
+
+        .float-bottom-right {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            z-index: 1000;
+        }
+
+        .float-bottom-right .info-container .card {
+            display: none;
+        }
+
+        .float-bottom-right .info-container:hover .card,
+        .float-bottom-right .info-container .card:hover {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+<!-- Content -->
+<!-- Page Header and Search Bar -->
+<div class="container search-container">
+    <div class="row justify-content-center">
+        <div class="col-md-auto">
+            <div class="search-heading">
+                <h2>Search for Materials Published by Author Name</h2>
+                <p class="text-right">powered by <a href="https://www.crossref.org/">Crossref</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
+            <div class="input-group input-group-md">
+                <input id="search-input" type="text" class="form-control" placeholder="eg. Richard"
+                       aria-label="eg. Richard" autofocus>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Results -->
+<div class="container results-container">
+    <div class="row justify-content-center">
+        <div class="col-sm-8">
+            <ul id="response-list" class="list-group list-group-flush"></ul>
+        </div>
+    </div>
+</div>
+
+<!-- Load external RxJS -->
+<script src="https://unpkg.com/@reactivex/rxjs@5.0.3/dist/global/Rx.js"></script>
+
+<!-- Add custom inline JavaScript -->
+<script>
+    const output = document.getElementById("response-list"); // grab the response div
+
+    function showResults(resp) {
+        var items = resp['message']['items']
+
+        output.innerHTML = ""; // Clear the contents first
+        animationDelay = 0; // Pick a starting value for animation delay
+
+        if (items.length == 0) { // We check if we have any results
+            output.innerHTML = "Could not find any :("; // If there were no results we update the response
+        } else {
+            items.forEach(item => { // We loop through the results
+                resultItem = `
+            <div class="list-group-item animated fadeInUp" style="animation-delay: ${animationDelay}s;">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">${item.title[0]}</h5>
+              </div>
+              <p class="mb-1">${(item['container-title'] && item['container-title'][0]) || ""}</p>
+              <small class="text-muted"><a href="${item['URL']}" target="_blank">${item['URL']}</a></small>
+              <div> 
+                <p class="badge badge-primary badge-pill">${item['publisher'] || ''}</p>
+                <p class="badge badge-primary badge-pill">${item['type'] || ''}</p> 
+              </div>
+            </div>
+            `;
+                output.insertAdjacentHTML("beforeend", resultItem); // The markup for the result is then added
+                animationDelay += 0.1; // We increase the animation delay so that the next elements starts with
+                                       //  to the results block the animation a little later
+            });
+        }
+    }
+
+    // =======================================================================================
+    // =======================================================================================
+    // ====================================== Edit Here ======================================
+    // =======================================================================================
+
+
+    // ========================================= End =========================================
+
+    // let searchInput = document.getElementById("search-input");
+
+    // Rx.Observable.fromEvent(searchInput, 'input')
+    //   .pluck('target', 'value')
+    //   .filter(searchTerm => searchTerm.length > 2)
+    //   .debounceTime(500)
+    //   .distinctUntilChanged()
+    //   .switchMap(searchKey => Rx.Observable.ajax(`https://api.crossref.org/works?rows=50&query.author=${searchKey}`)
+    //     .map(resp => ({
+    //         "status" : resp["status"] == 200,
+    //         "details" : resp["status"] == 200 ? resp["response"] : [],
+    //         "result_hash": Date.now()
+    //       })
+    //     )
+    //   )
+    //   .filter(resp => resp.status !== false)
+    //   .distinctUntilKeyChanged('response_hash')
+    //   .subscribe(resp => showResults(resp.details));
+
+</script>
+</body>
+
+</html>
