@@ -141,7 +141,7 @@
             )
         )
         .filter(resp => resp.status !== false)
-        .distinctUntilKeyChanged('response_hash')
+        .distinctUntilChanged((a, b) => a.result_hash === b.result_hash)
         .subscribe(resp => showResults(resp.details));
 </script>
 </body>
