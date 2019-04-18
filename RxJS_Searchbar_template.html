@@ -116,7 +116,7 @@
                 resultItem = `
             <div class="list-group-item animated fadeInUp" style="animation-delay: ${animationDelay}s;">
               <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">${item.title[0]}</h5>
+                <h5 class="mb-1">${(item['title'] && item['title'][0]) || "&lt;Title not available&gt;"}</h5>
               </div>
               <p class="mb-1">${(item['container-title'] && item['container-title'][0]) || ""}</p>
               <small class="text-muted"><a href="${item['URL']}" target="_blank">${item['URL']}</a></small>
